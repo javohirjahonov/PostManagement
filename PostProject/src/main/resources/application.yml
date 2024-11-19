@@ -1,0 +1,48 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postsdb
+    username: postgres
+    password: 123
+    hikari:
+      connectionTimeout: 30000
+      maximumPoolSize: 10
+      minimumIdle: 2
+      idleTimeout: 600000
+      maxLifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jahonovjavohir0@gmail.com
+    password: vidjzcdqexllrvlq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  cloud:
+    config:
+      enabled: false
+    import-check:
+      enabled: false
+
+jwt:
+  secret:
+    key: 753778214125442A472D4B6150645367566B59703373367639792F423F452848567890iuyiu67567886578uyutuio7865467897654678965467uior678545
+  access:
+    expiry: 86400000
+  refresh:
+    expiry: 604800000
