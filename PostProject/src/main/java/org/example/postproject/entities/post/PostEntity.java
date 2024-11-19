@@ -22,7 +22,7 @@ public class PostEntity extends BaseEntity {
     @Lob
     private byte[] image;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) // Ensure non-null author
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
