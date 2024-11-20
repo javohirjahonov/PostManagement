@@ -12,7 +12,6 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findUserEntityByPhoneNumber(String phoneNumber);
-//    Optional<UserEntity> findByUsername(String username); // `username` matches your entity field
 
 
     @Query(value = "select u from users u join u.roles r where r.name = 'USER' and u.id = ?1")

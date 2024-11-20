@@ -66,7 +66,7 @@ public class UserService {
 
         RoleEntity role = roleRepository.findRoleEntitiesByName("USER");
         if (role == null) {
-            RoleDto roleDto = RoleDto.builder().name("USER").permissions(List.of("POST", "GET", "UPDATE", "DELETE")).build();
+            RoleDto roleDto = RoleDto.builder().name("USER").permissions(List.of("POST", "PUT", "GET", "UPDATE", "DELETE")).build();
             role = roleService.save(roleDto).getData();
         }
         userEntity.setRoles(List.of(role));

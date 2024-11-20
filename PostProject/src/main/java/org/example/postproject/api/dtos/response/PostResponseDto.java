@@ -1,11 +1,12 @@
 package org.example.postproject.api.dtos.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class PostResponseDto {
     private String id;
@@ -14,4 +15,6 @@ public class PostResponseDto {
     private String userId;
     private String userName;
     private byte[] image;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 }

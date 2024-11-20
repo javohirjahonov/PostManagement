@@ -32,22 +32,15 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PermissionRepository permissionRepository;
-    private final RestTemplate restTemplate;
-    private final JwtService jwtService;
-    private final ModelMapper modelMapper;
 
 
     public StandardResponse<RoleEntity> save(RoleDto roleDto) {
         RoleEntity roleEntityByName = roleRepository.findRoleEntitiesByName(roleDto.getName());
-        // If role already exists
         if (roleEntityByName != null) throw new UniqueObjectException("Role already exists");
-        // If role doesn't exists in db
         List<String> permissions = roleDto.getPermissions();
         List<PermissionEntity> rolePermission = new ArrayList<>();
-        // Checking if db has its permissions
         for (String permission : permissions) {
             PermissionEntity permissionEntitiesByPermission = permissionRepository.findPermissionEntitiesByPermission(permission);
-            // If not we create a new permission
             if (permissionEntitiesByPermission == null) {
                 permissionEntitiesByPermission = PermissionEntity.builder().permission(permission).build();
                 rolePermission.add(permissionRepository.save(permissionEntitiesByPermission));

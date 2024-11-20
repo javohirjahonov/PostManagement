@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/update-profile")
-    @PreAuthorize("isAuthenticated()") // Ensure user is authenticated
+    @PreAuthorize("isAuthenticated()")
     public StandardResponse<UserDetailsForFront> updateProfile(
             @Valid @RequestBody UserUpdateRequest updateRequest,
             Principal principal
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/get-all-users")
-    @PreAuthorize("hasAuthority('ADMIN')") // Allow only admins to access all users
+    @PreAuthorize("hasAuthority('ADMIN')")
     public StandardResponse<List<UserDetailsForFront>> getAllUsers(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()") // Ensure user is authenticated
+    @PreAuthorize("isAuthenticated()")
     public StandardResponse<UserDetailsForFront> getCurrentUser(Principal principal) {
         if (principal == null) {
             throw new SecurityException("Unauthorized access");

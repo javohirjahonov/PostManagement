@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @RestController
 @RequiredArgsConstructor
@@ -69,31 +68,31 @@ public class PostController {
     @PutMapping("/update-post/{postId}")
     @PreAuthorize("@postSecurityService.isAuthor(#postId, principal.name)")
     public StandardResponse<PostResponseDto> updatePost(
-            @PathVariable UUID postId,
-            @RequestBody PostUpdateDto postUpdateDto,
-            Principal principal
-    ) {
-        String email = principal.getName();
-        UserEntity user = userRepository.findByEmail(email)
+            @PathVariable UUID postId, @RequestBody PostUpdateDto postUpdateDto, Principal principal) {
+        UserEntity user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+
         return postService.updatePost(postId, postUpdateDto, user.getId());
     }
 
     @DeleteMapping("/delete-post/{postId}")
-    @PreAuthorize("@postSecurityService.isAuthor(#postId, principal.name)")
+    @PreAuthorize("@postSecurityService.isAuthor(#postId, principal.name)") // Check ownership
     public void deletePost(@PathVariable UUID postId, Principal principal) {
-        UUID userId = UUID.fromString(principal.getName());
-        postService.deletePost(postId, userId);
+        String email = principal.getName();
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+
+        postService.deletePost(postId, user.getId());
     }
 
     @GetMapping("/get-user-post/{postId}")
-    @PreAuthorize("permitAll()") // Public access
+    @PreAuthorize("permitAll()")
     public StandardResponse<PostResponseDto> getPostById(@PathVariable UUID postId) {
         return postService.getPostById(postId);
     }
 
     @GetMapping("/get-all-posts")
-    @PreAuthorize("permitAll()") // Public access
+    @PreAuthorize("permitAll()")
     public StandardResponse<List<PostResponseDto>> getAllPosts() {
         return postService.getAllPosts();
     }
