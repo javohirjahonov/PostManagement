@@ -42,11 +42,15 @@ public class PostService {
 
         @Transactional
         public StandardResponse<PostResponseDto> updatePost(UUID postId, PostUpdateDto postUpdateDto, UUID userId) {
+            UserEntity user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
             PostEntity post = postRepository.findById(postId)
                     .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
             post.setTitle(postUpdateDto.getTitle());
             post.setContent(postUpdateDto.getContent());
+            post.setUser(user);
             postRepository.save(post);
 
             return StandardResponse.<PostResponseDto>builder()
@@ -78,7 +82,7 @@ public class PostService {
             List<PostEntity> posts = postRepository.findAll();
             return StandardResponse.<List<PostResponseDto>>builder()
                     .status(Status.SUCCESS)
-                    .data(postMapper.toResponseDtoList(posts)) // Use the mapper method
+                    .data(postMapper.toResponseDtoList(posts))
                     .build();
         }
 
