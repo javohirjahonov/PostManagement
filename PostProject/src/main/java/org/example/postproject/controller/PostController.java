@@ -65,19 +65,23 @@ public class PostController {
     }
 
 
-    @PutMapping("/update-post/{postId}")
+    @PutMapping("/update-post")
     @PreAuthorize("@postSecurityService.isAuthor(#postId, principal.name)")
     public StandardResponse<PostResponseDto> updatePost(
-            @PathVariable UUID postId, @RequestBody PostUpdateDto postUpdateDto, Principal principal) {
+            @RequestParam UUID postId,
+            @RequestBody PostUpdateDto postUpdateDto,
+            Principal principal) {
+
         UserEntity user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
 
         return postService.updatePost(postId, postUpdateDto, user.getId());
     }
 
-    @DeleteMapping("/delete-post/{postId}")
+
+    @DeleteMapping("/delete-post")
     @PreAuthorize("@postSecurityService.isAuthor(#postId, principal.name)") // Check ownership
-    public void deletePost(@PathVariable UUID postId, Principal principal) {
+    public void deletePost(@RequestParam UUID postId, Principal principal) {
         String email = principal.getName();
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
